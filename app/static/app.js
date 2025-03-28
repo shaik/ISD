@@ -26,12 +26,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle capture button click
     captureBtn.addEventListener('click', () => {
+        // Reset the camera input value to ensure it triggers the camera
+        cameraInput.value = '';
         cameraInput.click();
     });
 
     // Handle camera input change
     cameraInput.addEventListener('change', function() {
-        handleFiles(this.files);
+        if (this.files && this.files.length > 0) {
+            handleFiles(this.files);
+        }
     });
 
     // Prevent default drag behaviors

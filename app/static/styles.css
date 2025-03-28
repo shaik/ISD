@@ -107,10 +107,15 @@ main {
 .capture-btn {
     background-color: var(--accent-color);
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
-.upload-btn:hover {
-    background-color: var(--secondary-color);
+.capture-btn::before {
+    content: "📸";
+    font-size: 1.2rem;
 }
 
 .capture-btn:hover {
@@ -275,5 +280,12 @@ footer {
     
     .upload-btn, .capture-btn {
         width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+    }
+
+    .capture-btn {
+        background-color: var(--accent-color);
+        order: -1; /* Make capture button appear first on mobile */
     }
 }
