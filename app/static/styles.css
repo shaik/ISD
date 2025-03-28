@@ -289,3 +289,74 @@ footer {
         order: -1; /* Make capture button appear first on mobile */
     }
 }
+
+/* Color Palette */
+.color-palette {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+}
+
+.color-palette h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.color-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    background-color: white;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.2s ease;
+}
+
+.color-item:hover {
+    transform: translateY(-2px);
+}
+
+.color-swatch {
+    width: 100%;
+    height: 80px;
+    border-radius: var(--border-radius);
+    border: 2px solid #eee;
+}
+
+.color-info {
+    text-align: center;
+}
+
+.color-hex {
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.color-name {
+    font-size: 1rem;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+@media (max-width: 767px) {
+    .color-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.8rem;
+        padding: 0.8rem;
+    }
+    
+    .color-swatch {
+        height: 60px;
+    }
+}

@@ -151,6 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayStyleResults(data) {
         // Clear previous content
         styleDescription.innerHTML = '';
+        document.getElementById('color-grid').innerHTML = '';
+        
+        // Log received data
+        console.log('Received data:', data);
         
         // Check if we have an error message
         if (data.style_title && data.style_title.includes('Error')) {
@@ -170,6 +174,41 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add elements to the container
         styleDescription.appendChild(titleElement);
         styleDescription.appendChild(descriptionElement);
+
+        // Display color palette if available
+        console.log('Colors data:', data.colors);
+        if (data.colors && data.colors.length > 0) {
+            const colorGrid = document.getElementById('color-grid');
+            console.log('Creating color grid with', data.colors.length, 'colors');
+            data.colors.forEach(color => {
+                console.log('Processing color:', color);
+                const colorItem = document.createElement('div');
+                colorItem.className = 'color-item';
+                
+                const colorSwatch = document.createElement('div');
+                colorSwatch.className = 'color-swatch';
+                colorSwatch.style.backgroundColor = color.hex;
+                
+                const colorInfo = document.createElement('div');
+                colorInfo.className = 'color-info';
+                
+                const hexCode = document.createElement('div');
+                hexCode.className = 'color-hex';
+                hexCode.textContent = color.hex;
+                
+                const colorName = document.createElement('div');
+                colorName.className = 'color-name';
+                colorName.textContent = color.name;
+                
+                colorInfo.appendChild(hexCode);
+                colorInfo.appendChild(colorName);
+                colorItem.appendChild(colorSwatch);
+                colorItem.appendChild(colorInfo);
+                colorGrid.appendChild(colorItem);
+            });
+        } else {
+            console.log('No colors data available');
+        }
     }
 
     function resetForm() {
