@@ -1,7 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Display version information
+    document.getElementById('version-number').textContent = APP_VERSION.version;
+    document.getElementById('build-number').textContent = APP_VERSION.build;
+
     // DOM Elements
     const dropArea = document.getElementById('drop-area');
     const fileInput = document.getElementById('file-input');
+    const cameraInput = document.getElementById('camera-input');
+    const captureBtn = document.getElementById('capture-btn');
     const analyzeBtn = document.getElementById('analyze-btn');
     const uploadForm = document.getElementById('upload-form');
     const previewContainer = document.getElementById('preview-container');
@@ -9,6 +15,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultContainer = document.getElementById('result-container');
     const styleDescription = document.getElementById('style-description');
     const loadingContainer = document.getElementById('loading-container');
+
+    // Check if device supports camera
+    const supportsCamera = 'mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices;
+    
+    // Update capture button visibility based on device support
+    if (!supportsCamera) {
+        captureBtn.style.display = 'none';
+    }
+
+    // Handle capture button click
+    captureBtn.addEventListener('click', () => {
+        cameraInput.click();
+    });
+
+    // Handle camera input change
+    cameraInput.addEventListener('change', function() {
+        handleFiles(this.files);
+    });
 
     // Prevent default drag behaviors
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -49,11 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle selected files from file input
     fileInput.addEventListener('change', function() {
         handleFiles(this.files);
-    });
-
-    // Click on drop area triggers file input
-    dropArea.addEventListener('click', () => {
-        fileInput.click();
     });
 
     function handleFiles(files) {

@@ -82,18 +82,39 @@ main {
     color: #666;
 }
 
-.upload-btn {
+.button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.upload-btn, .capture-btn {
     display: inline-block;
-    background-color: var(--primary-color);
-    color: white;
     padding: 0.5rem 1.5rem;
     border-radius: 30px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    border: none;
+}
+
+.upload-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.capture-btn {
+    background-color: var(--accent-color);
+    color: white;
 }
 
 .upload-btn:hover {
     background-color: var(--secondary-color);
+}
+
+.capture-btn:hover {
+    background-color: #d4956a;
 }
 
 #analyze-btn {
@@ -216,6 +237,17 @@ footer {
     color: #777;
 }
 
+.version-info {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    color: #999;
+}
+
+.version-info span {
+    font-family: monospace;
+    color: #666;
+}
+
 /* Responsive design */
 @media (min-width: 768px) {
     .container {
@@ -234,5 +266,14 @@ footer {
     
     .result-container, .upload-container {
         padding: 1.5rem;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .upload-btn, .capture-btn {
+        width: 100%;
     }
 }
