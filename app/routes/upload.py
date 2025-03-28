@@ -68,7 +68,8 @@ async def upload_image(file: UploadFile = File(...)) -> Dict[str, Any]:
             "success": True,
             "style_title": style_result["style_title"],
             "style_description": style_result["style_description"],
-            "filename": unique_filename
+            "filename": unique_filename,
+            "colors": style_result.get("colors", [])  # Include colors if available
         }
     
     except Exception as e:
