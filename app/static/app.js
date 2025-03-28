@@ -105,7 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
     uploadForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        if (!fileInput.files.length) {
+        // Get the file from either input
+        const file = fileInput.files[0] || cameraInput.files[0];
+        
+        if (!file) {
             alert('Please select an image first');
             return;
         }
@@ -117,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Create form data
         const formData = new FormData();
-        formData.append('file', fileInput.files[0]);
+        formData.append('file', file);
 
         try {
             // Send request to backend
