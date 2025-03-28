@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Display version information
-    document.getElementById('version-number').textContent = APP_VERSION.version;
-    document.getElementById('build-number').textContent = APP_VERSION.build;
+    document.getElementById('version-number').textContent = APP_VERSION_OBJ.version;
+    document.getElementById('build-number').textContent = APP_VERSION_OBJ.build;
 
     // DOM Elements
     const dropArea = document.getElementById('drop-area');
