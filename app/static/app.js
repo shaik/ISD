@@ -152,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear previous content
         styleDescription.innerHTML = '';
         document.getElementById('color-grid').innerHTML = '';
+        document.getElementById('materials-grid').innerHTML = '';
         
         // Log received data
         console.log('Received data:', data);
@@ -208,6 +209,32 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } else {
             console.log('No colors data available');
+        }
+
+        // Display materials if available
+        console.log('Materials data:', data.materials);
+        if (data.materials && data.materials.length > 0) {
+            const materialsGrid = document.getElementById('materials-grid');
+            console.log('Creating materials grid with', data.materials.length, 'materials');
+            data.materials.forEach(material => {
+                console.log('Processing material:', material);
+                const materialItem = document.createElement('div');
+                materialItem.className = 'material-item';
+                
+                const materialType = document.createElement('div');
+                materialType.className = 'material-type';
+                materialType.textContent = material.type;
+                
+                const materialFinish = document.createElement('div');
+                materialFinish.className = 'material-finish';
+                materialFinish.textContent = material.finish;
+                
+                materialItem.appendChild(materialType);
+                materialItem.appendChild(materialFinish);
+                materialsGrid.appendChild(materialItem);
+            });
+        } else {
+            console.log('No materials data available');
         }
     }
 

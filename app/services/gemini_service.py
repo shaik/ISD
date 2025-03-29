@@ -42,6 +42,8 @@ async def analyze_interior_image(image_path: str) -> Dict[str, str]:
         Dict[str, str]: Dictionary containing:
             - style_title: A concise title for the identified interior design style
             - style_description: A brief description of the style's characteristics
+            - colors: List of color information
+            - materials: List of material information
     
     Raises:
         Exception: Handled internally, returns error information in the response dictionary
@@ -51,7 +53,9 @@ async def analyze_interior_image(image_path: str) -> Dict[str, str]:
         # Return informative error if API key is missing or using placeholder
         return {
             "style_title": "Error",
-            "style_description": "Valid Gemini API key is required. Please update your .env file with a valid API key from https://ai.google.dev/"
+            "style_description": "Valid Gemini API key is required. Please update your .env file with a valid API key from https://ai.google.dev/",
+            "colors": [],
+            "materials": []
         }
         
     try:
@@ -65,7 +69,7 @@ async def analyze_interior_image(image_path: str) -> Dict[str, str]:
         
         # Craft a detailed prompt that instructs Gemini how to analyze the image
         # The prompt is structured to ensure consistent, high-quality responses
-        prompt = """Analyze the interior design style and colors of the room shown in the image.
+        prompt = """Analyze the interior design style, colors, and materials of the room shown in the image.
 
 Respond in this exact format:
 
@@ -76,6 +80,12 @@ Respond in this exact format:
 List 5-7 dominant colors in this format:
 - #HEXCODE: Color Name
 - #HEXCODE: Color Name
+etc.
+
+[Material Analysis]
+List the visible materials and their finishes in this format:
+- Material Type: Finish Description
+- Material Type: Finish Description
 etc.
 
 Guidelines:
@@ -95,6 +105,13 @@ Color Analysis:
 - Order colors from most dominant to least dominant
 - Always use the exact format: - #HEXCODE: Color Name
 
+Material Analysis:
+- Identify visible materials and their finishes
+- Include furniture, flooring, wall treatments, and decorative elements
+- Be specific about the material type and finish (e.g., "Natural Oak Wood", "Brushed Brass", "Smoked Glass")
+- Order from most prominent to least prominent
+- Always use the exact format: - Material Type: Finish Description
+
 Examples:
 
 Modern Minimalism
@@ -107,15 +124,12 @@ Clean lines and neutral tones create a calm, uncluttered space with a sleek and 
 - #D4AF37: Antique Gold
 - #8B4513: Saddle Brown
 
-Bohemian Eclectic
-Layered textures and colorful decor give this room a warm, creative, and relaxed atmosphere.
-
-[Color Analysis]
-- #E67E22: Burnt Orange
-- #2ECC71: Emerald Green
-- #F1C40F: Sunflower Yellow
-- #8E44AD: Deep Purple
-- #E74C3C: Coral Red"""
+[Material Analysis]
+- Natural Oak Wood: Matte Finish
+- Stainless Steel: Brushed Finish
+- Glass: Clear Tempered
+- Leather: Aniline Dyed
+- Marble: Polished White"""
         
         # Send the prompt and image to Gemini for analysis
         # The model processes both text and image inputs together
@@ -128,7 +142,7 @@ Layered textures and colorful decor give this room a warm, creative, and relaxed
         print(response_text)
         print("========================\n")
         
-        # Parse the response to extract the style title, description, and colors
+        # Parse the response to extract the style title, description, colors, and materials
         sections = response_text.split('\n\n')
         
         if len(sections) >= 2:
@@ -167,10 +181,41 @@ Layered textures and colorful decor give this room a warm, creative, and relaxed
                         colors.append(color_data)
                         print(f"Added color: {color_data}")
             
+            # Extract material information
+            materials = []
+            # Look for material section
+            material_section = next((section for section in sections if "[Material Analysis]" in section), None)
+            
+            # Log material section for debugging
+            print("\n=== MATERIAL SECTION ===")
+            print(material_section)
+            print("===================\n")
+            
+            if material_section:
+                # Split into lines and filter out empty lines and the header
+                material_lines = [line for line in material_section.split('\n') 
+                                if line.strip() and not "[Material Analysis]" in line]
+                print("\n=== MATERIAL LINES ===")
+                print(material_lines)
+                print("===================\n")
+                
+                for line in material_lines:
+                    if line.strip() and ':' in line:
+                        # Remove the leading dash and split by colon
+                        line = line.strip().lstrip('-').strip()
+                        material_type, finish = line.split(':', 1)
+                        material_data = {
+                            "type": material_type.strip(),
+                            "finish": finish.strip()
+                        }
+                        materials.append(material_data)
+                        print(f"Added material: {material_data}")
+            
             result = {
                 "style_title": style_title,
                 "style_description": style_description,
                 "colors": colors,
+                "materials": materials,
                 "version": "1.0.0"
             }
             
@@ -185,7 +230,8 @@ Layered textures and colorful decor give this room a warm, creative, and relaxed
             return {
                 "style_title": "Interior Style",
                 "style_description": response_text,
-                "colors": []
+                "colors": [],
+                "materials": []
             }
     
     except Exception as e:
@@ -197,11 +243,15 @@ Layered textures and colorful decor give this room a warm, creative, and relaxed
         if "API key not valid" in error_str or "API_KEY_INVALID" in error_str:
             return {
                 "style_title": "API Error",
-                "style_description": "Your Gemini API key is invalid. Please check your .env file and update with a valid API key."
+                "style_description": "Your Gemini API key is invalid. Please check your .env file and update with a valid API key.",
+                "colors": [],
+                "materials": []
             }
         
         # General error response for other exceptions
         return {
             "style_title": "Error",
-            "style_description": f"Error analyzing image: {error_str}"
+            "style_description": f"Error analyzing image: {error_str}",
+            "colors": [],
+            "materials": []
         }
